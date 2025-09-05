@@ -1,0 +1,280 @@
+Parece simples, mas de certa forma a ideia é simples. O primeiro ponto para se construir uma knowledge base é começar a armazenar informação. E, se você tiver a sequência da informação, ótimo. Os timestamps, não sei se são os timestamps, mas só o que é básico. Tempo e a informação. O Knowledge Base é construído através de interações, de melhorias no sistema de memória. Há um ponto importante. Na hora de uma pergunta ser feita, os campos de memória, os agentes especializados de memória daquele usuário que está fazendo aquela interação, vão montar o prompt baseado na pergunta, a potencializar de várias perspectivas o prompt do usuário com conhecimento pleno dele, ou um conhecimento de um projeto, por exemplo. Montar esse Knowledge Base. Isso é bastante interessante. E aí eu quero montar o grupo de agentes que vai começar a construir, são agentes de curadoria que constroem isso, esse sistema, que vai funcionar no modelo de grafo, ou no modelo de banco de dados, NoSQL, tipo MongoDB, um exemplo, só um exemplo. Não quero empreender o nome de empresa. Prender estaque. Então, eu queria saber quais são os agentes básicos e como que eles interagem, qual é a sequência de interação entre eles que vai fazer com que um processo evolutivo até deles aconteça. É importantíssimo esse retroalimentação e o teste, o reteste. E se retestar, se analisar a qualidade da própria resposta, se retestar.
+O ChatGPT disse:
+Pensou por 22s
+Arquitetura de agentes para uma Knowledge Base “viva” (tempo + informação)
+
+Abaixo está um desenho técnico, agnóstico de vendor, que cobre: agentes básicos, papéis, interfaces, sequência de interação (ingestão → consulta → retroalimentação) e mecanismos de teste/reteste com autoevolução.
+
+1) Princípios de memória
+
+Tipos de memória
+
+Episódica (interações do usuário, sessões, decisões).
+
+Semântica (fatos, conceitos, definições).
+
+Procedural (como fazer, playbooks).
+
+Relacional (ligações entre entidades; grafo).
+
+Tempo
+
+event_time (quando o fato ocorreu) ≠ ingest_time (quando entrou no sistema).
+
+Toda memória tem proveniência, versão e decaimento/refresh.
+
+Escopos
+
+Privado do usuário, projeto, organização. Controle de acesso por escopo + etiquetas.
+
+2) Agentes (mínimo viável) e papéis
+Núcleo de construção da base
+
+Agente Coletor (Ingestor)
+Captura fontes (texto/chat, arquivos, APIs). Gera envelope bruto com source_id, user_id, project_id, timestamps.
+
+Normalizador & Carimbador
+Limpeza, extração de metadados, idioma, deduplicação fraca (hash perceptual), carimbo de tempo duplo (event_time/ingest_time) e proveniência.
+
+Curador de Memória
+Chunking semântico, criação de abstracts (resumos multi-nível), detecção de qualidade (ruído, incompletude), classificação do tipo de memória (episódica/semântica/etc.).
+
+Anotador/Extrator
+NER, classificação, extração de relações e hipóteses; sugere ligações a entidades existentes.
+
+Ligador de Grafo
+Consolida entidades, resolve co-referências, cria/atualiza nós e arestas com pesos e validade temporal.
+
+Indexador
+Mantém índices lexical, semântico (vetorial) e estrutural (grafos) com versões e snapshots.
+
+Núcleo de resposta
+
+Orquestrador de Consulta/Prompt
+Lê a pergunta → infere intenção e escopo → planeja a busca (qual índice/grafo usar; profundidade) → compõe o prompt context com visões: usuário, projeto, fatos, contrafatos.
+
+Reranker/Seleção de Contexto
+Reclassifica passagens por signal fusion (similaridade, recência, autoridade, cobertura de aspectos, diversidade).
+
+Crítico/Verificador
+Avalia a resposta (checagem factual, completude, contraditórios), aplica checklists e auto-debate (resposta vs. crítica). Pode solicitar novo plano ao Orquestrador.
+
+Núcleo de evolução/qualidade
+
+Coletor de Feedback & Telemetria
+Capta feedback explícito (👍/👎, edições do usuário) e implícito (tempo de leitura, cliques). Loga features da sessão.
+
+Avaliador Offline/Online
+
+Offline: suíte de goldens (Q&A canônicos do domínio), medindo EM/F1, nDCG@k, precisão factual.
+
+Online: interleaving de estratégias de recuperação/prompt, A/B de prompts.
+
+Otimizador de Políticas
+Ajusta pesos (recência vs. autoridade), decai/renova memórias, atualiza templates de prompt e regras do Critico. Pode promover memórias para “confiáveis”.
+
+Governança & Segurança
+Controle de acesso, auditoria, PII, retenção, redaction no pré-index.
+
+Esses 13 formam um MVP robusto. Em maturidade avançada, adiciona-se agentes especialistas (domínio, regulamentação, cálculo, simulação), mas o fluxo permanece.
+
+3) Sequência de interação (end-to-end)
+A) Ingestão/Construção
+
+Coletor recebe item X.
+
+Normalizador carimba (event_time, ingest_time), saneia, de-dup.
+
+Curador: chunking + resumos multi-nível.
+
+Anotador: entidades/relações/tópicos/hipóteses.
+
+Ligador de Grafo: entity resolution + arestas temporais.
+
+Indexador: atualiza índices (lexical, vetorial, grafo).
+
+Avaliador Offline (amostragem): checa qualidade dos novos itens.
+
+Otimizador: define trust level inicial e TTL/refresh.
+
+Estado da memória (state machine): Novo → Curado → Indexado → Confiável → Obsoleto (decay) → Arquivado/Removido.
+
+B) Consulta/Resposta
+
+Orquestrador recebe pergunta Q (+ perfil, projeto, histórico).
+
+Gera Plano de Recuperação (ex.: top-K vetorial + subgrafo de n saltos + filtros por event_time).
+
+Reranker produz context bundle (K passagens + subgrafo + resumos).
+
+Orquestrador monta Prompt Final com perspectivas:
+
+Perfil do usuário (preferências/contexto),
+
+Estado do projeto,
+
+Evidências (citações/minipassagens),
+
+Counterfactuals/riscos se pertinentes,
+
+Instruções de estilo/limites.
+
+LLM gera Rascunho de Resposta.
+
+Crítico executa checks:
+
+Factualidade (amostragem cruzada),
+
+Cobertura de aspectos da pergunta,
+
+Consistência temporal (uso correto de event_time),
+
+Contradições com memórias “confiáveis”.
+Se falhar: envia Replanejamento ao Orquestrador (iteração curta).
+
+Entrega a resposta + rastro de evidências (ids/timestamps).
+
+Coletor de Feedback capta sinais do usuário.
+
+Otimizador atualiza pesos/estratégias, promove/demove memórias e registra learned prefs (por escopo).
+
+4) Esquemas mínimos (mensagens entre agentes)
+Envelope de conteúdo (pós-normalização)
+{
+  "id": "content-uuid",
+  "source_id": "origin-uuid",
+  "user_id": "u123",
+  "project_id": "p456",
+  "scope": "project", 
+  "modality": "text",
+  "language": "pt-BR",
+  "event_time": "2025-09-01T10:12:00Z",
+  "ingest_time": "2025-09-03T13:00:00Z",
+  "provenance": {"uri":"...","hash":"..."},
+  "body": "conteúdo bruto",
+  "privacy_tags": ["no-pii"],
+  "version": 1
+}
+
+Candidato a memória (pós-curadoria/anotação)
+{
+  "content_id": "content-uuid",
+  "chunks": [{"id":"c1","text":"...","abstract":"..."}],
+  "entities": [{"id":"e:EmpresaX","type":"Org"}],
+  "relations": [{"s":"e:EmpresaX","p":"usa","o":"e:TecnologiaY","t":[{"start":"...","end":"..."}]}],
+  "memory_type": "semantica",
+  "quality": {"noise":0.08,"completeness":0.77},
+  "trust": {"level":"low","score":0.42}
+}
+
+Plano de recuperação (consulta)
+{
+  "query_id": "q-789",
+  "intent": "question_answering",
+  "filters": {"scope":"project","time":{"from":"2024-01-01"}},
+  "strategies": [
+    {"name":"vector_topk","k":12},
+    {"name":"graph_expand","hops":2,"seed":"entities_from_query"},
+    {"name":"lexical_boost","terms":["exatos"]}
+  ],
+  "rerank_policy": {"blend":{"semantic":0.5,"recency":0.3,"authority":0.2}}
+}
+
+5) Métricas e critérios de qualidade (por estágio)
+
+Ingestão/Curadoria: taxa de deduplicação, chunk cohesion, cobertura de entidades, abstract ROUGE vs. fonte.
+
+Grafo: precisão/recall de entity linking (amostra auditada), consistência temporal de arestas.
+
+Indexação: latência de atualização, divergência entre índices.
+
+Recuperação: nDCG@k, MRR, cobertura de aspectos (subtópicos), frescor médio (now - event_time).
+
+Resposta: F1/EM em goldens, factualidade verificada, consistência temporal, taxa de self-critique fail → replan success.
+
+Experiência: CTR em evidências, edição pós-resposta, resolution rate sem reconsulta.
+
+6) Reteste e autoevolução
+
+Gatilhos de reteste
+
+Chegada de nova fonte com alta autoridade,
+
+Queda súbita em nDCG@k,
+
+Alteração de templates ou pesos do Reranker,
+
+Memória “confiável” atingindo limite de validade (decay TTL).
+
+Estratégias de reteste
+
+Regression suite de perguntas canônicas do domínio (goldens),
+
+Shadow mode: novas políticas avaliam em paralelo, sem afetar usuário,
+
+Interleaving online de dois planos de recuperação e comparação por cliques/aceitação,
+
+Auto-debate periódico (agente Crítico gera contra-perguntas; Orquestrador replana; medir estabilidade da resposta).
+
+Promoção/Demover memórias
+
+Arestas/nós ganham ou perdem trust score por: confirmação cruzada, uso frequente, contradiction flags, desatualização.
+
+Decay programático: trust = trust * exp(-λΔt) com refresh se há confirmação recente.
+
+7) Montagem de prompt com “potencialização por perspectivas”
+
+Slots do prompt (preenchidos pelo Orquestrador, a partir dos agentes):
+
+Perfil do Usuário (preferências, histórico curto relevante).
+
+Contexto do Projeto (objetivos, restrições, decisões já tomadas).
+
+Evidências (passagens + IDs + event_time).
+
+Mapa de Entidades/Relacionamentos (subgrafo condensado).
+
+Riscos/Contradições (itens marcados pelo Crítico).
+
+Instruções de Estilo/Política (ex.: citar datas, não inventar termos).
+
+Checklist do Crítico (como verifier prompt acoplado).
+
+8) Interações entre agentes (resumo tipo diagrama)
+[Coletor] 
+   -> [Normalizador] 
+   -> [Curador] 
+   -> [Anotador] 
+   -> [Ligador de Grafo] 
+   -> [Indexador] 
+   -> (publica evento: memória pronta)
+
+[Usuário Pergunta] 
+   -> [Orquestrador] -> (Plano)
+   -> [Índices + Grafo] -> [Reranker]
+   -> [Orquestrador] (Prompt final)
+   -> [LLM] (Rascunho)
+   -> [Crítico] (Validação/Refute) 
+       -> (se falha) [Orquestrador] replaneja
+   -> Resposta ao usuário + Evidências
+   -> [Feedback] -> [Avaliador] -> [Otimizador] (ajustes)
+
+9) Observabilidade e governança (essenciais)
+
+Trilhas de auditoria por item de memória e por resposta (quais evidências influenciaram).
+
+Políticas por escopo (quem pode ler/gravar/propagar memórias).
+
+Anonimização/Redação antes de indexar; chaves de revogação.
+
+Versionamento de índices/grafo: permitir rollbacks.
+
+10) Nota sobre armazenamento
+
+Grafo (propriedades + validade temporal) para entidades/relações.
+
+NoSQL para documentos, chunks e metadados.
+
+Índice vetorial/lexical desacoplado para recuperação.
+
+Event log para orquestrar agentes (idempotência por content_id + version).

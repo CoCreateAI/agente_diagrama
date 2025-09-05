@@ -1,0 +1,29 @@
+flowchart TD
+    subgraph Prospecção
+        A[Visitante no Site] --> B{Preenche Formulário?};
+        B -->|Sim| C[Lead Gerado];
+        B -->|Não| Fim[Fim do Fluxo];
+    end
+
+    subgraph Qualificação
+        C --> E{Lead Válido?};
+        E -->|Sim| F[Contato Inicial];
+        E -->|Não| G[Lead Descartado];
+    end
+
+    subgraph Negociação
+        F --> H{Interesse na Proposta?};
+        H -->|Sim| I[Envio da Proposta];
+        H -->|Não| J[Nutrição do Lead];
+        I --> K{Proposta Aceita?};
+        K -->|Sim| L[Venda Realizada!];
+        K -->|Não| M[Follow-up];
+    end
+
+    L --> N([Cliente]);
+    G --> Fim;
+    J --> Fim;
+    M --> H;
+
+    style L fill:#9f6,stroke:#333,stroke-width:2px
+    style N fill:#9f6,stroke:#333,stroke-width:2px

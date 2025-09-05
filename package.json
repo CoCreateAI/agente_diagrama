@@ -1,0 +1,15 @@
+{
+  "name": "mermaid-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "generate-diagram": "mmdc -i flowchart.mmd -o flowchart.png"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^10.9.0"
+  }
+}

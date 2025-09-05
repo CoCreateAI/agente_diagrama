@@ -1,0 +1,66 @@
+graph TD
+    subgraph "Fluxo de Ingestão e Construção da Base"
+        A1["Fontes de Dados
+(Texto, Arquivos, APIs)"] --> A2(Coletor)
+        A2 --> A3(Normalizador & Carimbador)
+        A3 --> A4(Curador de Memória)
+        A4 --> A5(Anotador/Extrator)
+        A5 --> A6(Ligador de Grafo)
+        A6 --> A7(Indexador)
+        A7 --> A8((Memória Pronta))
+    end
+
+    subgraph "Armazenamento de Conhecimento"
+        S1["Grafo
+(Entidades, Relações)"]
+        S2["Banco NoSQL
+(Documentos, Chunks)"]
+        S3["Índice Vetorial/Lexical"]
+        S4["Log de Eventos"]
+    end
+
+    subgraph "Fluxo de Consulta e Resposta"
+        B1[Usuário] --> B2{Orquestrador de Consulta}
+        B2 --> B3["Plano de
+Recuperação"]
+        B3 --> B4(Reranker & Seletor)
+        B4 --> B2
+        B2 --> B5[LLM]
+        B5 --> B6(Crítico/Verificador)
+        B6 -- Resposta Válida --> B7[Resposta ao Usuário]
+        B6 -- Falha na Validação --> B2
+    end
+
+    subgraph "Fluxo de Evolução e Qualidade"
+        C1["Feedback do Usuário
+(explícito/implícito)"] --> C2(Coletor de Feedback)
+        C2 --> C3(Avaliador Offline/Online)
+        C3 --> C4(Otimizador de Políticas)
+        C4 --> C5((Políticas Atualizadas))
+    end
+
+    %% Conexões entre os Fluxos
+    A8 --> S1
+    A8 --> S2
+    A8 --> S3
+    A8 --> S4
+
+    B3 --> S1
+    B3 --> S2
+    B3 --> S3
+
+    B7 --> C1
+
+    C5 --> B2
+    C5 --> B4
+    C5 --> B6
+    C5 --> A8
+
+    classDef data fill:#e6f3ff,stroke:#007bff,stroke-width:2px
+    classDef agent fill:#e0f7fa,stroke:#00796b,stroke-width:2px
+    classDef system fill:#fff9c4,stroke:#fbc02d,stroke-width:2px
+    classDef feedback fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px
+
+    class A1,S1,S2,S3,S4,A8,C5 data
+    class A2,A3,A4,A5,A6,A7,B2,B4,B5,B6,C2,C3,C4 agent
+    class B1,B7,C1 feedback

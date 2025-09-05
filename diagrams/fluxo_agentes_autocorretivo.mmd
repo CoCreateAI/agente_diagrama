@@ -1,0 +1,43 @@
+graph TD
+    subgraph "Frontend (Chat)"
+        A[Usuário insere prompt] --> B{Orquestrador de Fluxo}
+    end
+
+    subgraph "Ciclo de Design, Geração e Validação"
+        ManualDesign[("manual_de_boas_praticas_design.md")]
+        ManualSintaxe[("manual_de_boas_praticas_mermaid.md")]
+        MCP[("MCP Context7")]
+
+        B --> C1(1. Agente Analista)
+        C1 -.-> ManualDesign
+        C1 -- Plano de Design v1 --> C3(2. Agente Crítico)
+        C3 -- Críticas --> C1
+
+        C3 -- Plano Aprovado --> C2(3. Agente Desenhista)
+        C2 -.-> MCP
+        
+        C2 -- Código Mermaid --> D("4. Validador de Sintaxe (Script)")
+        D -- É válido? --> E{Decisão}
+        E -- Sim --> F[Apresenta Diagrama no Chat]
+        
+        E -- Não --> G(5. Agente Corretor)
+        G -.-> ManualSintaxe
+        G -.-> MCP
+        G -- Código Corrigido --> D
+    end
+
+    F --> H(Fim)
+
+    classDef user fill:#c9daf8,stroke:#6d9eeb,stroke-width:2px
+    classDef orchestrator fill:#fce5cd,stroke:#f9b570,stroke-width:2px
+    classDef agent fill:#d9ead3,stroke:#93c47d,stroke-width:2px
+    classDef process fill:#f4cccc,stroke:#e06666,stroke-width:2px
+    classDef final fill:#d0e0e3,stroke:#76a5af,stroke-width:2px
+    classDef artifact fill:#fff2cc,stroke:#ffd966,stroke-width:2px
+
+    class A user
+    class B orchestrator
+    class C1,C2,C3,G agent
+    class D,E process
+    class F,H final
+    class ManualDesign,ManualSintaxe,MCP artifact
