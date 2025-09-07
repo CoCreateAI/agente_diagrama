@@ -26,6 +26,12 @@ def validar_diagrama_mermaid(codigo_mermaid: str, temp_file_path: str = "temp_di
         else:
             mmdc_path = os.path.join(os.path.dirname(__file__), "..", "node_modules", ".bin", "mmdc")
 
+        # Define o caminho para o arquivo .env na pasta pai
+        dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+
+        # Carrega as variáveis de ambiente do arquivo especificado
+        load_dotenv(dotenv_path=dotenv_path)
+
         # Executa o mermaid-cli para validar a sintaxe (tentando gerar um SVG)
         # A saída é descartada se for bem-sucedido, mas o erro é capturado
         resultado = subprocess.run(

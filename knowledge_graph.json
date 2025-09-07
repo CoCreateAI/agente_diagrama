@@ -1,0 +1,408 @@
+{
+  "nodes": [
+    {
+      "id": "chroma_db",
+      "type": "database",
+      "label": "ChromaDB (Vector Store)",
+      "summary": "Base de dados vetorial local que armazena embeddings dos nós e arestas do grafo de conhecimento, permitindo buscas semânticas avançadas e consultas por similaridade."
+    },
+    {
+      "id": "chroma_manager.py",
+      "type": "module",
+      "label": "ChromaDB Manager",
+      "summary": "Módulo centralizado que gerencia todas as operações do ChromaDB: inicialização, verificação de sincronização via hash SHA256, ingestão automática de dados e execução de consultas semânticas."
+    },
+    {
+      "id": "app.py",
+      "type": "orchestrator",
+      "label": "app.py (Orquestrador)",
+      "summary": "Aplicação principal Streamlit que orquestra todo o sistema: inicialização automática, coordenação entre agentes de IA, interface de usuário com três abas (geração, visualização, busca semântica)."
+    },
+    {
+      "id": "agente_analista",
+      "type": "agent",
+      "label": "Agente Analista",
+      "summary": "Agente de IA responsável por analisar prompts do usuário e criar/refinar planos de design detalhados para diagramas, utilizando diretrizes do manual de design e feedback do agente crítico."
+    },
+    {
+      "id": "agente_critico",
+      "type": "agent",
+      "label": "Agente Crítico",
+      "summary": "Agente de IA que avalia criticamente os planos de design, identifica problemas potenciais e fornece feedback estruturado para refinamento, garantindo qualidade antes da implementação."
+    },
+    {
+      "id": "agente_desenhista",
+      "type": "agent",
+      "label": "Agente Desenhista",
+      "summary": "Agente de IA especializado em converter planos de design aprovados em código Mermaid funcional, seguindo as melhores práticas de sintaxe e estruturação de diagramas."
+    },
+    {
+      "id": "agente_validador",
+      "type": "agent",
+      "label": "Agente Validador",
+      "summary": "Agente que verifica a sintaxe e renderização do código Mermaid gerado, utilizando o Mermaid CLI para detectar erros de sintaxe e problemas de renderização."
+    },
+    {
+      "id": "agente_corretor",
+      "type": "agent",
+      "label": "Agente Corretor",
+      "summary": "Agente de IA que corrige erros de sintaxe no código Mermaid, utilizando manuais de referência e documentação MCP para resolver problemas identificados pelo validador."
+    },
+    {
+      "id": "plano_de_design",
+      "type": "data_object",
+      "label": "Plano de Design (JSON)",
+      "summary": "Estrutura de dados JSON que descreve detalhadamente o design do diagrama: elementos visuais, relacionamentos, hierarquias, estilos e metadados necessários para implementação."
+    },
+    {
+      "id": "codigo_mermaid",
+      "type": "data_object",
+      "label": "Código Mermaid (str)",
+      "summary": "Código-fonte final em sintaxe Mermaid.js que representa o diagrama completo, pronto para renderização e visualização na interface do usuário."
+    },
+    {
+      "id": "critica_plano",
+      "type": "data_object",
+      "label": "Crítica do Plano (JSON)",
+      "summary": "Estrutura JSON contendo feedback detalhado do agente crítico sobre o plano de design: problemas identificados, sugestões de melhoria e status de aprovação."
+    },
+    {
+      "id": "manual_design.md",
+      "type": "knowledge_source",
+      "label": "Manual de Design",
+      "summary": "Documentação com diretrizes e melhores práticas para criação de diagramas: padrões visuais, convenções de nomenclatura, estruturas recomendadas e princípios de design."
+    },
+    {
+      "id": "manual_mermaid.md",
+      "type": "knowledge_source",
+      "label": "Manual de Mermaid",
+      "summary": "Guia de referência completo da sintaxe Mermaid.js: tipos de diagramas, comandos, formatação, estilos e exemplos práticos para correção de erros."
+    },
+    {
+      "id": "mermaid_docs_mcp",
+      "type": "knowledge_source",
+      "label": "Documentação Mermaid (MCP)",
+      "summary": "Documentação oficial Mermaid acessada via Model Context Protocol (MCP), fornecendo informações atualizadas sobre sintaxe, recursos e melhores práticas."
+    },
+    {
+      "id": "openai_service",
+      "type": "external_service",
+      "label": "Azure OpenAI Service",
+      "summary": "Serviço de IA da Microsoft Azure que fornece capacidades de processamento de linguagem natural para todos os agentes do sistema, incluindo GPT-4 e modelos de embedding."
+    },
+    {
+      "id": "mermaid_cli",
+      "type": "external_service",
+      "label": "Mermaid CLI",
+      "summary": "Ferramenta de linha de comando para validação e renderização de diagramas Mermaid, utilizada pelo agente validador para verificar sintaxe e detectar erros."
+    },
+    {
+      "id": "style.css",
+      "type": "knowledge_source",
+      "label": "style.css",
+      "summary": "Folha de estilos CSS que define a identidade visual da aplicação Streamlit: cores, tipografia, layout e elementos de interface seguindo as diretrizes da CoCreateAI."
+    },
+    {
+      "id": "knowledge_graph.json",
+      "type": "knowledge_source",
+      "label": "Knowledge Graph (JSON)",
+      "summary": "Arquivo principal que define a arquitetura do sistema: nós (componentes), arestas (relacionamentos) e metadados, servindo como fonte de verdade para a estrutura do projeto."
+    },
+    {
+      "id": "ingest_to_chroma.py",
+      "type": "script",
+      "label": "ChromaDB Ingestion Script",
+      "summary": "Script standalone para ingestão inicial de dados do knowledge_graph.json no ChromaDB. Funcionalidade agora integrada ao chroma_manager.py para automação."
+    },
+    {
+      "id": "query_chroma.py",
+      "type": "script",
+      "label": "ChromaDB Query Interface (Streamlit)",
+      "summary": "Interface Streamlit independente para visualização tabular dos dados do ChromaDB: nós, arestas e metadados em formato organizado para análise e depuração."
+    },
+    {
+      "id": "requirements.txt",
+      "type": "config",
+      "label": "Python Dependencies",
+      "summary": "Arquivo de configuração listando todas as dependências Python do projeto: Streamlit, ChromaDB, OpenAI, pandas e outras bibliotecas necessárias para funcionamento."
+    },
+    {
+      "id": "semantic_search_ui",
+      "type": "ui_component",
+      "label": "Busca Semântica (UI Tab)",
+      "summary": "Componente de interface que permite consultas em linguagem natural sobre a arquitetura, com sugestões inteligentes, insights semânticos e resultados enriquecidos."
+    },
+    {
+      "id": "knowledge_graph_viewer",
+      "type": "ui_component",
+      "label": "Explorar Grafo (UI Tab)",
+      "summary": "Componente que exibe visualização interativa do grafo de conhecimento: nós coloridos por tipo, relacionamentos direcionais e detalhes expandíveis para cada elemento."
+    },
+    {
+      "id": "diagram_generator_ui",
+      "type": "ui_component",
+      "label": "Gerar Diagrama (UI Tab)",
+      "summary": "Interface principal para geração colaborativa de diagramas: entrada de prompts, orquestração de agentes, logs em tempo real e visualização do diagrama final."
+    },
+    {
+      "id": "api_orchestrator.py",
+      "type": "orchestrator",
+      "label": "API Orchestrator (Automático)",
+      "summary": "Sistema de orquestração automática que gerencia inicialização: leitura do grafo, sincronização ChromaDB, análise semântica profunda e geração de insights arquiteturais."
+    },
+    {
+      "id": "chromadb_explorer_ui",
+      "type": "ui_component",
+      "label": "Explorador ChromaDB (UI Tab)",
+      "summary": "Interface completa para navegação, filtragem e exportação dos dados armazenados no ChromaDB, com paginação, estatísticas em tempo real e visualização detalhada de metadados."
+    }
+  ],
+  "edges": [
+    {
+      "source": "app.py",
+      "target": "style.css",
+      "label": "loads",
+      "description": "A aplicação principal carrega os estilos CSS para definir a identidade visual e layout da interface Streamlit."
+    },
+    {
+      "source": "app.py",
+      "target": "chroma_manager.py",
+      "label": "uses",
+      "description": "O orquestrador principal utiliza o ChromaDB Manager para todas as operações de banco de dados vetorial e busca semântica."
+    },
+    {
+      "source": "chroma_manager.py",
+      "target": "chroma_db",
+      "label": "manages",
+      "description": "O ChromaDB Manager gerencia completamente o banco vetorial: inicialização, sincronização, ingestão de dados e execução de consultas."
+    },
+    {
+      "source": "chroma_manager.py",
+      "target": "knowledge_graph.json",
+      "label": "ingests from",
+      "description": "O manager lê e processa os dados do grafo de conhecimento, convertendo nós e arestas em embeddings vetoriais para armazenamento."
+    },
+    {
+      "source": "app.py",
+      "target": "agente_analista",
+      "label": "invoca",
+      "description": "O orquestrador inicia o processo de geração de diagramas invocando o Agente Analista para processar o prompt do usuário."
+    },
+    {
+      "source": "app.py",
+      "target": "agente_critico",
+      "label": "invoca em ciclo",
+      "description": "O sistema executa ciclos iterativos de refinamento, invocando o Agente Crítico para avaliar e melhorar os planos de design."
+    },
+    {
+      "source": "app.py",
+      "target": "agente_desenhista",
+      "label": "invoca",
+      "description": "Após aprovação do plano, o orquestrador aciona o Agente Desenhista para converter o design em código Mermaid funcional."
+    },
+    {
+      "source": "app.py",
+      "target": "agente_validador",
+      "label": "invoca em ciclo",
+      "description": "O sistema executa ciclos de validação, verificando a sintaxe do código Mermaid gerado e identificando erros para correção."
+    },
+    {
+      "source": "app.py",
+      "target": "agente_corretor",
+      "label": "invoca",
+      "description": "Quando erros são detectados, o orquestrador aciona o Agente Corretor para resolver problemas de sintaxe no código Mermaid."
+    },
+    {
+      "source": "agente_analista",
+      "target": "plano_de_design",
+      "label": "cria/refina",
+      "description": "O Agente Analista cria planos de design detalhados a partir de prompts do usuário e os refina com base no feedback do agente crítico."
+    },
+    {
+      "source": "agente_analista",
+      "target": "manual_design.md",
+      "label": "usa como guia",
+      "description": "O agente consulta o manual de design para seguir diretrizes e melhores práticas na criação de planos estruturados."
+    },
+    {
+      "source": "agente_analista",
+      "target": "openai_service",
+      "label": "consome",
+      "description": "O agente utiliza o serviço OpenAI para processamento de linguagem natural e geração de conteúdo inteligente."
+    },
+    {
+      "source": "agente_analista",
+      "target": "critica_plano",
+      "label": "recebe para refinar",
+      "description": "O agente recebe feedback estruturado do crítico e utiliza essas informações para melhorar e refinar os planos de design."
+    },
+    {
+      "source": "agente_critico",
+      "target": "plano_de_design",
+      "label": "avalia",
+      "description": "O Agente Crítico analisa criticamente os planos de design, identificando problemas potenciais e áreas de melhoria."
+    },
+    {
+      "source": "agente_critico",
+      "target": "critica_plano",
+      "label": "produz",
+      "description": "O agente gera feedback estruturado com críticas construtivas, sugestões de melhoria e status de aprovação do plano."
+    },
+    {
+      "source": "agente_critico",
+      "target": "openai_service",
+      "label": "consome",
+      "description": "O agente utiliza capacidades de IA para análise crítica sofisticada e geração de feedback qualificado."
+    },
+    {
+      "source": "agente_desenhista",
+      "target": "plano_de_design",
+      "label": "consome",
+      "description": "O Agente Desenhista lê e interpreta os planos de design aprovados para convertê-los em implementação concreta."
+    },
+    {
+      "source": "agente_desenhista",
+      "target": "codigo_mermaid",
+      "label": "produz",
+      "description": "O agente gera código Mermaid funcional e bem estruturado a partir dos planos de design, seguindo melhores práticas de sintaxe."
+    },
+    {
+      "source": "agente_desenhista",
+      "target": "mermaid_docs_mcp",
+      "label": "usa como guia",
+      "description": "O agente consulta a documentação oficial Mermaid via MCP para garantir sintaxe correta e utilizar recursos atualizados."
+    },
+    {
+      "source": "agente_desenhista",
+      "target": "openai_service",
+      "label": "consome",
+      "description": "O agente utiliza IA para geração inteligente de código Mermaid, garantindo qualidade e aderência aos padrões."
+    },
+    {
+      "source": "agente_validador",
+      "target": "codigo_mermaid",
+      "label": "valida sintaxe",
+      "description": "O Agente Validador verifica a corretude sintática do código Mermaid gerado, identificando erros que impedem a renderização."
+    },
+    {
+      "source": "agente_validador",
+      "target": "mermaid_cli",
+      "label": "usa",
+      "description": "O agente executa o Mermaid CLI para testar a renderização do código e detectar erros de sintaxe de forma prática."
+    },
+    {
+      "source": "agente_corretor",
+      "target": "codigo_mermaid",
+      "label": "corrige",
+      "description": "O Agente Corretor modifica e corrige o código Mermaid com problemas, resolvendo erros de sintaxe identificados pelo validador."
+    },
+    {
+      "source": "agente_corretor",
+      "target": "manual_mermaid.md",
+      "label": "usa como guia",
+      "description": "O agente consulta o manual de referência Mermaid para aplicar correções precisas e seguir padrões estabelecidos."
+    },
+    {
+      "source": "agente_corretor",
+      "target": "mermaid_docs_mcp",
+      "label": "usa como guia",
+      "description": "O agente acessa documentação atualizada via MCP para resolver problemas complexos e utilizar recursos mais recentes."
+    },
+    {
+      "source": "agente_corretor",
+      "target": "openai_service",
+      "label": "consome",
+      "description": "O agente utiliza IA para geração inteligente de correções e resolução de problemas complexos de sintaxe."
+    },
+    {
+      "source": "ingest_to_chroma.py",
+      "target": "knowledge_graph.json",
+      "label": "reads",
+      "description": "O script de ingestão lê os dados estruturados do grafo de conhecimento para processá-los e armazená-los no ChromaDB."
+    },
+    {
+      "source": "ingest_to_chroma.py",
+      "target": "chroma_db",
+      "label": "populates",
+      "description": "O script popula o banco vetorial com embeddings dos nós e arestas, criando índices para busca semântica eficiente."
+    },
+    {
+      "source": "query_chroma.py",
+      "target": "chroma_db",
+      "label": "queries",
+      "description": "A interface de consulta executa buscas no banco vetorial e apresenta resultados em formato tabular organizado."
+    },
+    {
+      "source": "app.py",
+      "target": "semantic_search_ui",
+      "label": "contains",
+      "description": "A aplicação principal contém o componente de busca semântica como uma aba integrada da interface."
+    },
+    {
+      "source": "app.py",
+      "target": "knowledge_graph_viewer",
+      "label": "contains",
+      "description": "A aplicação inclui o visualizador de grafo como aba dedicada para exploração interativa da arquitetura."
+    },
+    {
+      "source": "app.py",
+      "target": "diagram_generator_ui",
+      "label": "contains",
+      "description": "A aplicação contém a interface principal de geração colaborativa de diagramas com orquestração de agentes."
+    },
+    {
+      "source": "semantic_search_ui",
+      "target": "chroma_manager.py",
+      "label": "uses",
+      "description": "O componente de busca utiliza o ChromaDB Manager para executar consultas semânticas e recuperar resultados relevantes."
+    },
+    {
+      "source": "knowledge_graph_viewer",
+      "target": "knowledge_graph.json",
+      "label": "displays",
+      "description": "O visualizador lê e renderiza os dados do grafo em formato interativo com nós coloridos e relacionamentos direcionais."
+    },
+    {
+      "source": "chroma_manager.py",
+      "target": "requirements.txt",
+      "label": "depends on",
+      "description": "O manager requer bibliotecas especificadas no requirements.txt: ChromaDB, pandas e outras dependências para funcionamento."
+    },
+    {
+      "source": "app.py",
+      "target": "api_orchestrator.py",
+      "label": "uses",
+      "description": "A aplicação utiliza o orquestrador para inicialização automática: leitura do grafo, sincronização e análise semântica."
+    },
+    {
+      "source": "api_orchestrator.py",
+      "target": "chroma_manager.py",
+      "label": "orchestrates",
+      "description": "O orquestrador coordena as operações do ChromaDB Manager como parte da sequência de inicialização automática."
+    },
+    {
+      "source": "api_orchestrator.py",
+      "target": "knowledge_graph.json",
+      "label": "reads and analyzes",
+      "description": "O orquestrador lê o grafo para visão inicial da arquitetura e executa análise semântica profunda dos componentes."
+    },
+    {
+      "source": "semantic_search_ui",
+      "target": "api_orchestrator.py",
+      "label": "gets insights from",
+      "description": "A interface de busca obtém insights semânticos e sugestões inteligentes gerados pelo orquestrador durante a inicialização."
+    },
+    {
+      "source": "app.py",
+      "target": "chromadb_explorer_ui",
+      "label": "contains",
+      "description": "A aplicação inclui o explorador ChromaDB como uma quarta aba dedicada para navegação completa dos dados vetoriais armazenados."
+    },
+    {
+      "source": "chromadb_explorer_ui",
+      "target": "chroma_manager.py",
+      "label": "uses",
+      "description": "O explorador utiliza o ChromaDB Manager para recuperar todos os dados, aplicar filtros e gerar estatísticas em tempo real."
+    }
+  ]
+}

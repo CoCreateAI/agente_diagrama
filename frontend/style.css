@@ -1,0 +1,61 @@
+/* Importa as fontes do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+/* Variáveis de Cor da CoCreateAI */
+:root {
+    --primary-color: #1F3B57;      /* Azul Petróleo */
+    --secondary-color: #E26A5E;    /* Coral */
+    --accent-color: #A0E7B2;       /* Verde Menta */
+    --neutral-dark: #2E2E2E;       /* Cinza Grafite */
+    --neutral-light: #E6E6E6;      /* Cinza Claro */
+    --background-color: #F9FAFC;    /* Off-white */
+}
+
+/* Estilo Global */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-color);
+}
+
+/* Títulos e Cabeçalhos */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--primary-color);
+}
+
+/* Botões */
+.stButton>button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.stButton>button:hover {
+    background-color: #d15a4e;
+}
+
+/* Área de Texto */
+.stTextArea textarea {
+    border: 1px solid var(--neutral-light);
+    border-radius: 8px;
+    padding: 10px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Barra Lateral */
+.css-1d391kg {
+    background-color: #FFFFFF;
+    border-right: 1px solid var(--neutral-light);
+}
+
+/* Container de Logs */
+.stAlert {
+    border-radius: 8px;
+    border: 1px solid var(--accent-color);
+    background-color: #f0fff4;
+}

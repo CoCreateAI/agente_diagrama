@@ -1,0 +1,8 @@
+--- Starting Knowledge Graph Ingestion Script ---
+Loading .env file from: C:\Users\Luiz Carlos\Projects\agente_diagrama\Assistente de Diagramas com IA\..\.env
+NEO4J_URI: Loaded
+NEO4J_USERNAME: Loaded
+Attempting to connect to Neo4j...
+Unable to retrieve routing information
+Failed to connect to Neo4j: Unable to retrieve routing information
+Could not proceed with ingestion due to connection failure.

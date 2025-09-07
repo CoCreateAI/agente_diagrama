@@ -3,8 +3,11 @@ from openai import AzureOpenAI
 from dotenv import load_dotenv
 from mcp_client import get_library_docs # Importa o cliente MCP
 
-# Carrega as variáveis de ambiente do arquivo .env
-load_dotenv()
+# Define o caminho para o arquivo .env na pasta pai
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+
+# Carrega as variáveis de ambiente do arquivo especificado
+load_dotenv(dotenv_path=dotenv_path)
 
 # Configura o cliente da Azure OpenAI
 client = AzureOpenAI(

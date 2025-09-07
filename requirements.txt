@@ -1,5 +1,7 @@
 streamlit
 streamlit-mermaid
 openai
-python-dotenv
 requests
+pyvis==0.3.2
+chromadb==0.5.4
+pandas==2.2.2

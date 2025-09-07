@@ -1,0 +1,355 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-09-07T12:40:00-03:00",
+  "description": "Dicionário detalhado do projeto Assistente de Diagramas com IA",
+  "nodes": {
+    "app.py": {
+      "id": "app.py",
+      "type": "orchestrator",
+      "label": "app.py (Orquestrador)",
+      "description": "Arquivo principal da aplicação que orquestra a interação entre os agentes e gerencia o fluxo de trabalho.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T12:30:00-03:00",
+      "dependencies": ["style.css", "agente_analista", "agente_critico", "agente_desenhista", "agente_validador", "agente_corretor"],
+      "dependents": [],
+      "relationships": {
+        "source": ["loads"],
+        "target": []
+      },
+      "metadata": {
+        "author": "Equipe de Desenvolvimento",
+        "created_at": "2025-08-15T09:00:00-03:00",
+        "modified_at": "2025-09-07T12:30:00-03:00"
+      }
+    },
+    
+    "agente_analista": {
+      "id": "agente_analista",
+      "type": "agent",
+      "label": "Agente Analista",
+      "description": "Responsável por analisar o prompt do usuário e criar/refinar o plano de design do diagrama.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T10:15:00-03:00",
+      "dependencies": ["manual_design.md", "openai_service"],
+      "dependents": ["app.py"],
+      "relationships": {
+        "source": ["cria/refina", "usa como guia", "consome", "recebe para refinar"],
+        "target": ["invoca"]
+      },
+      "metadata": {
+        "author": "Equipe de IA",
+        "created_at": "2025-08-15T09:00:00-03:00",
+        "modified_at": "2025-09-07T10:15:00-03:00"
+      }
+    },
+    
+    "agente_critico": {
+      "id": "agente_critico",
+      "type": "agent",
+      "label": "Agente Crítico",
+      "description": "Avalia criticamente o plano de design e fornece feedback para melhoria.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T10:20:00-03:00",
+      "dependencies": ["plano_de_design", "openai_service"],
+      "dependents": ["app.py"],
+      "relationships": {
+        "source": ["avalia", "produz", "consome"],
+        "target": ["invoca em ciclo"]
+      },
+      "metadata": {
+        "author": "Equipe de IA",
+        "created_at": "2025-08-15T09:00:00-03:00",
+        "modified_at": "2025-09-07T10:20:00-03:00"
+      }
+    },
+    
+    "style.css": {
+      "id": "style.css",
+      "type": "knowledge_source",
+      "label": "style.css",
+      "description": "Arquivo de estilos CSS que define a identidade visual da aplicação seguindo as diretrizes da CoCreateAI.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T12:35:00-03:00",
+      "dependencies": [],
+      "dependents": ["app.py"],
+      "relationships": {
+        "source": [],
+        "target": ["loads"]
+      },
+      "metadata": {
+        "author": "Equipe de Frontend",
+        "created_at": "2025-09-07T12:00:00-03:00",
+        "modified_at": "2025-09-07T12:35:00-03:00"
+      }
+    },
+    
+    "plano_de_design": {
+      "id": "plano_de_design",
+      "type": "data_object",
+      "label": "Plano de Design (JSON)",
+      "description": "Estrutura JSON que descreve o design do diagrama, incluindo elementos, relacionamentos e metadados.",
+      "mermaid_cli": "A ferramenta de linha de comando para renderizar diagramas Mermaid em arquivos de imagem, usada pelo Agente Validador.",
+      "style.css": "Arquivo de folha de estilos para customizar a aparência da aplicação Streamlit.",
+      "chroma_db": "Uma base de dados vetorial de código aberto usada para armazenar e consultar os embeddings do grafo de conhecimento, permitindo buscas semânticas.",
+      "chroma_manager.py": "Um módulo dedicado que encapsula toda a lógica para interagir com o ChromaDB, incluindo ingestão, sincronização e consulta de dados.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T11:45:00-03:00",
+      "dependencies": ["agente_analista", "agente_critico", "agente_desenhista"],
+      "dependents": ["agente_desenhista", "agente_critico"],
+      "relationships": {
+        "source": [],
+        "target": ["cria/refina", "avalia", "consome"]
+      },
+      "metadata": {
+        "schema_version": "1.0",
+        "created_at": "2025-08-15T09:00:00-03:00",
+        "modified_at": "2025-09-07T11:45:00-03:00"
+      }
+    },
+    
+    "codigo_mermaid": {
+      "id": "codigo_mermaid",
+      "type": "data_object",
+      "label": "Código Mermaid (str)",
+      "description": "Código-fonte em formato Mermaid.js que representa o diagrama final.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T11:50:00-03:00",
+      "dependencies": ["agente_desenhista", "agente_validador", "agente_corretor"],
+      "dependents": [],
+      "relationships": {
+        "source": [],
+        "target": ["produz", "valida sintaxe", "corrige"]
+      },
+      "metadata": {
+        "mermaid_version": "10.0.0",
+        "created_at": "2025-08-15T09:00:00-03:00",
+        "modified_at": "2025-09-07T11:50:00-03:00"
+      }
+    },
+    
+    "manual_design.md": {
+      "id": "manual_design.md",
+      "type": "knowledge_source",
+      "label": "Manual de Design",
+      "description": "Documentação que contém diretrizes e melhores práticas para criação de diagramas.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-01T14:30:00-03:00",
+      "dependencies": [],
+      "dependents": ["agente_analista"],
+      "relationships": {
+        "source": [],
+        "target": ["usa como guia"]
+      },
+      "metadata": {
+        "author": "Equipe de Design",
+        "created_at": "2025-08-10T10:00:00-03:00",
+        "modified_at": "2025-09-01T14:30:00-03:00"
+      }
+    },
+    
+    "openai_service": {
+      "id": "openai_service",
+      "type": "external_service",
+      "label": "Azure OpenAI Service",
+      "description": "Serviço de IA que fornece capacidades de processamento de linguagem natural.",
+      "status": "active",
+      "version": "2023-05-15",
+      "last_updated": "2025-09-07T09:00:00-03:00",
+      "dependencies": [],
+      "dependents": ["agente_analista", "agente_critico", "agente_desenhista", "agente_corretor"],
+      "relationships": {
+        "source": [],
+        "target": ["consome"]
+      },
+      "metadata": {
+        "provider": "Microsoft Azure",
+        "service_tier": "Standard",
+        "api_version": "2023-05-15"
+      }
+    },
+    "chroma_db": {
+      "id": "chroma_db",
+      "type": "database",
+      "label": "ChromaDB (Vector Store)",
+      "description": "Uma base de dados vetorial de código aberto usada para armazenar e consultar os embeddings do grafo de conhecimento, permitindo buscas semânticas.",
+      "status": "active",
+      "version": "0.5.4",
+      "last_updated": "2025-09-07T16:42:15-03:00",
+      "dependencies": ["chroma_manager.py"],
+      "dependents": [],
+      "relationships": {
+        "source": [],
+        "target": ["manages"]
+      },
+      "metadata": {
+        "storage_path": "/chroma_db"
+      }
+    },
+    "chroma_manager.py": {
+      "id": "chroma_manager.py",
+      "type": "module",
+      "label": "ChromaDB Manager",
+      "description": "Um módulo dedicado que encapsula toda a lógica para interagir com o ChromaDB, incluindo ingestão, sincronização e consulta de dados.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T16:42:15-03:00",
+      "dependencies": ["chromadb", "knowledge_graph.json"],
+      "dependents": ["app.py"],
+      "relationships": {
+        "source": ["manages", "ingests from"],
+        "target": ["uses"]
+      },
+      "metadata": {
+        "author": "Equipe de Desenvolvimento"
+      }
+    },
+    "ingest_to_chroma.py": {
+      "id": "ingest_to_chroma.py",
+      "type": "script",
+      "label": "ChromaDB Ingestion Script",
+      "description": "Script standalone para ingerir dados do knowledge_graph.json no ChromaDB. Substituído pelo chroma_manager.py para automação.",
+      "status": "deprecated",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T16:53:17-03:00",
+      "dependencies": ["chromadb", "knowledge_graph.json"],
+      "dependents": [],
+      "relationships": {
+        "source": ["reads", "populates"],
+        "target": []
+      },
+      "metadata": {
+        "author": "Equipe de Desenvolvimento",
+        "note": "Funcionalidade integrada ao chroma_manager.py"
+      }
+    },
+    "query_chroma.py": {
+      "id": "query_chroma.py",
+      "type": "script",
+      "label": "ChromaDB Query Interface (Streamlit)",
+      "description": "Interface Streamlit standalone para visualizar e consultar dados do ChromaDB em formato tabular.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T16:53:17-03:00",
+      "dependencies": ["streamlit", "pandas", "chromadb"],
+      "dependents": [],
+      "relationships": {
+        "source": ["queries"],
+        "target": []
+      },
+      "metadata": {
+        "author": "Equipe de Desenvolvimento"
+      }
+    },
+    "requirements.txt": {
+      "id": "requirements.txt",
+      "type": "config",
+      "label": "Python Dependencies",
+      "description": "Arquivo de configuração que lista todas as dependências Python do projeto, incluindo ChromaDB, Streamlit, pandas e outras bibliotecas.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T16:53:17-03:00",
+      "dependencies": [],
+      "dependents": ["chroma_manager.py", "app.py", "query_chroma.py"],
+      "relationships": {
+        "source": [],
+        "target": ["depends on"]
+      },
+      "metadata": {
+        "packages": ["streamlit", "streamlit-mermaid", "openai", "requests", "pyvis", "chromadb", "pandas"]
+      }
+    },
+    "semantic_search_ui": {
+      "id": "semantic_search_ui",
+      "type": "ui_component",
+      "label": "Busca Semântica (UI Tab)",
+      "description": "Componente de interface que permite aos usuários fazer consultas em linguagem natural sobre o grafo de conhecimento usando busca semântica.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T16:53:17-03:00",
+      "dependencies": ["chroma_manager.py"],
+      "dependents": [],
+      "relationships": {
+        "source": ["uses"],
+        "target": ["contains"]
+      },
+      "metadata": {
+        "features": ["natural language queries", "semantic search", "real-time results"]
+      }
+    },
+    "knowledge_graph_viewer": {
+      "id": "knowledge_graph_viewer",
+      "type": "ui_component",
+      "label": "Explorar Grafo (UI Tab)",
+      "description": "Componente de interface que exibe a visualização interativa do grafo de conhecimento da arquitetura do projeto.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T16:53:17-03:00",
+      "dependencies": ["knowledge_graph.json", "visualize_knowledge_graph.py"],
+      "dependents": [],
+      "relationships": {
+        "source": ["displays"],
+        "target": ["contains"]
+      },
+      "metadata": {
+        "features": ["interactive graph", "node details", "relationship visualization"]
+      }
+    },
+    "diagram_generator_ui": {
+      "id": "diagram_generator_ui",
+      "type": "ui_component",
+      "label": "Gerar Diagrama (UI Tab)",
+      "description": "Componente de interface principal que orquestra a geração de diagramas através da colaboração entre os agentes de IA.",
+      "status": "active",
+      "version": "1.0.0",
+      "last_updated": "2025-09-07T16:53:17-03:00",
+      "dependencies": ["agente_analista", "agente_critico", "agente_desenhista", "agente_validador", "agente_corretor"],
+      "dependents": [],
+      "relationships": {
+        "source": [],
+        "target": ["contains"]
+      },
+      "metadata": {
+        "features": ["agent orchestration", "real-time logs", "diagram preview", "iterative refinement"]
+      }
+    }
+  },
+  "relationships": [
+    {
+      "source": "app.py",
+      "target": "agente_analista",
+      "type": "invoca",
+      "description": "O orquestrador inicia o Agente Analista para processar o prompt do usuário."
+    },
+    {
+      "source": "app.py",
+      "target": "agente_critico",
+      "type": "invoca em ciclo",
+      "description": "O orquestrador chama o Agente Crítico em um ciclo de feedback para melhorar o plano de design."
+    },
+    {
+      "source": "app.py",
+      "target": "style.css",
+      "type": "loads",
+      "description": "A aplicação carrega o arquivo de estilos para a interface do usuário."
+    },
+    {
+      "source": "agente_analista",
+      "target": "plano_de_design",
+      "type": "cria/refina",
+      "description": "O Agente Analista cria ou refina o plano de design com base no prompt do usuário."
+    },
+    {
+      "source": "agente_critico",
+      "target": "plano_de_design",
+      "type": "avalia",
+      "description": "O Agente Crítico avalia a qualidade e a completude do plano de design."
+    }
+  ]
+}
